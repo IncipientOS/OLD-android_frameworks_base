@@ -22,6 +22,7 @@ import static android.system.OsConstants.STDERR_FILENO;
 import static android.system.OsConstants.STDIN_FILENO;
 import static android.system.OsConstants.STDOUT_FILENO;
 
+import android.graphics.Typeface;
 import android.net.Credentials;
 import android.net.LocalSocket;
 import android.os.FactoryTest;
@@ -193,6 +194,10 @@ class ZygoteConnection {
                 childPipeFd = pipeFds[1];
                 serverPipeFd = pipeFds[0];
                 Os.fcntlInt(childPipeFd, F_SETFD, 0);
+            }
+
+            if (parsedArgs.refreshTheme) {
+                Typeface.recreateDefaults();
             }
 
             /**
@@ -374,6 +379,9 @@ class ZygoteConnection {
          */
         String appDataDir;
 
+        /** from --refresh_theme */
+        boolean refreshTheme;
+
         /**
          * Constructs instance and parses args
          * @param args zygote command-line args
@@ -532,6 +540,8 @@ class ZygoteConnection {
                     instructionSet = arg.substring(arg.indexOf('=') + 1);
                 } else if (arg.startsWith("--app-data-dir=")) {
                     appDataDir = arg.substring(arg.indexOf('=') + 1);
+                } else if (arg.equals("--refresh_theme")) {
+                    refreshTheme = true;
                 } else {
                     break;
                 }
