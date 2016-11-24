@@ -9346,4 +9346,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.Global.SINGLE_HAND_MODE).isEmpty() ?
                     isLeft ? "left" : "right" : "");
     }
+
+    public void freezeOrThawRotation(int rotation) {
+        mDesiredRotation = rotation;
+    }
 }
