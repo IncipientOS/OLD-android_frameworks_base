@@ -291,7 +291,6 @@ public class SignalClusterView
         state.mIsMobileTypeIconWide = statusType != 0 && isWide;
         state.mRoaming = roaming;
         mMobileIms = isMobileIms;
-
         apply();
     }
 
