@@ -332,11 +332,6 @@ interface IWindowManager
     oneway void statusBarVisibilityChanged(int visibility);
 
     /**
-     * Send some ActionHandler commands to WindowManager.
-     */
-    void sendCustomAction(in Intent intent);
-
-    /**
      * Called by System UI to notify of changes to the visibility of Recents.
      */
     oneway void setRecentsVisibility(boolean visible);
@@ -350,6 +345,11 @@ interface IWindowManager
      * Device has a software navigation bar (separate from the status bar).
      */
     boolean hasNavigationBar();
+
+    /**
+     * Send some ActionHandler commands to WindowManager.
+     */
+    void sendCustomAction(in Intent intent);
 
     /**
      * Device needs a software navigation bar (because it has no hardware keys).

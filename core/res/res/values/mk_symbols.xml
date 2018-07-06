@@ -15,7 +15,5 @@
 -->
 
 <resources>
-
     <java-symbol type="string" name="edit" />
-
 </resources>
