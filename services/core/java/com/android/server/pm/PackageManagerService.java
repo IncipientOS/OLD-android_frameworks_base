@@ -2637,6 +2637,21 @@ public class PackageManagerService extends IPackageManager.Stub {
                 }
             }
 
+            // Disable components marked for disabling at build-time
+            for (String name : mContext.getResources().getStringArray(
+                    com.android.internal.R.array.config_disabledComponents)) {
+                ComponentName cn = ComponentName.unflattenFromString(name);
+                Slog.v(TAG, "Disabling " + name);
+                String className = cn.getClassName();
+                PackageSetting pkgSetting = mSettings.mPackages.get(cn.getPackageName());
+                if (pkgSetting == null || pkgSetting.pkg == null
+                        || !pkgSetting.pkg.hasComponentClassName(className)) {
+                    Slog.w(TAG, "Unable to disable " + name);
+                    continue;
+                }
+                pkgSetting.disableComponentLPw(className, UserHandle.USER_OWNER);
+            }
+
             // Prepare storage for system user really early during boot,
             // since core system apps like SettingsProvider and SystemUI
             // can't wait for user to start
@@ -3174,8 +3189,27 @@ public class PackageManagerService extends IPackageManager.Stub {
                 ? Collections.<String>emptySet() : permissionsState.getPermissions(userId);
         final PackageUserState state = ps.readUserState(userId);
 
-        return PackageParser.generatePackageInfo(p, gids, flags,
-                ps.firstInstallTime, ps.lastUpdateTime, permissions, state, userId);
+        return mayFakeSignature(p, PackageParser.generatePackageInfo(p, gids, flags,
+                ps.firstInstallTime, ps.lastUpdateTime, permissions, state, userId),
+                permissions);
+    }
+
+    private PackageInfo mayFakeSignature(PackageParser.Package p, PackageInfo pi,
+            Set<String> permissions) {
+        try {
+            if (permissions.contains("android.permission.FAKE_PACKAGE_SIGNATURE")
+                    && p.applicationInfo.targetSdkVersion > Build.VERSION_CODES.LOLLIPOP_MR1
+                    && p.mAppMetaData != null) {
+                String sig = p.mAppMetaData.getString("fake-signature");
+                if (sig != null) {
+                    pi.signatures = new Signature[] {new Signature(sig)};
+                }
+            }
+        } catch (Throwable t) {
+            // We should never die because of any failures, this is system code!
+            Log.w("PackageManagerService.FAKE_PACKAGE_SIGNATURE", t);
+        }
+        return pi;
     }
 
     @Override

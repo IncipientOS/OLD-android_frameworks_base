@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2015 AICP
+     Copyright (C) 2017 Benzo Rom
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,11 +15,8 @@
      limitations under the License.
 -->
 <resources>
-    <!-- Floating action button -->
-    <dimen name="floating_action_button_translation_z">12dp</dimen>
-    <dimen name="floating_action_button_height">54dp</dimen>
-    <dimen name="floating_action_button_width">54dp</dimen>
-    <dimen name="floating_action_button_margin_side">32dp</dimen>
-    <dimen name="floating_action_button_margin_bottom">46dp</dimen>
-</resources>
+ 
+  <!-- Package Manager -->
+  <java-symbol type="array" name="config_disabledComponents" />
 
+</resources>
