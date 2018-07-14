@@ -208,6 +208,7 @@ import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import com.android.systemui.statusbar.policy.PreviewInflater;
 import com.android.systemui.statusbar.policy.RotationLockControllerImpl;
+import com.android.systemui.statusbar.policy.MinitBattery;
 import com.android.systemui.statusbar.policy.SecurityControllerImpl;
 import com.android.systemui.statusbar.policy.SuControllerImpl;
 import com.android.systemui.statusbar.policy.UserInfoController;
@@ -215,6 +216,8 @@ import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.android.systemui.statusbar.policy.WeatherControllerImpl;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.policy.NetworkController;
+import com.android.systemui.statusbar.policy.MinitBatteryController;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout
         .OnChildLocationsChangedListener;
 import com.android.systemui.statusbar.stack.StackStateAnimator;
@@ -363,6 +366,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     protected LockscreenWallpaper mLockscreenWallpaper;
     SuControllerImpl mSuController;
     WeatherControllerImpl mWeatherController;
+    MinitBatteryController mMinitBatteryController;
     private BurnInProtectionController mBurnInProtectionController;
 
     int mNaturalBarHeight = -1;
@@ -1098,6 +1102,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 }
             });
         }
+
+        mMinitBatteryController = new MinitBatteryController(mContext, mStatusBarView, mKeyguardStatusBar);
+        mPackageMonitor.addListener(mMinitBatteryController);
+
 
         // User info. Trigger first load.
         mKeyguardStatusBar.setUserInfoController(mUserInfoController);
@@ -4292,6 +4300,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mNavigationController.destroy();
         }
         mPackageMonitor.removeListener(mNavigationController);
+        mPackageMonitor.removeListener(mMinitBatteryController);
         mPackageMonitor.unregister();
 
         if (mHandlerThread != null) {
