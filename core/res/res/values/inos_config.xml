@@ -16,12 +16,10 @@
 ** limitations under the License.
 */
 -->
-
-    <!-- These resources are around just to allow their values to be customized
-    for different hardware and product builds.  Do not translate. -->
-    <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">    <!-- If this is true, key chords can be used to take a screen record on the device. -->
-
+<resources>
     <!-- Whether device has dash charging support -->
     <bool name="config_hasDashCharger">false</bool>
 
+    <!-- If this is true, key chords can be used to take a screen record on the device. -->
+    <bool name="config_enableScreenrecordChord">true</bool>
 </resources>
