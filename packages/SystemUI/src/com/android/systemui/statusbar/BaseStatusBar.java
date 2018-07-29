@@ -31,6 +31,7 @@ import android.app.TaskStackBuilder;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -316,21 +317,8 @@ public abstract class BaseStatusBar extends SystemUI implements
             setZenMode(mode);
 
             updateLockscreenNotificationSetting();
-        }
 
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            super.onChange(selfChange, uri);
-
-            if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.USE_SLIM_RECENTS))) {
-                        updateRecents();
-            } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.RECENTS_USE_OMNISWITCH))) {
-                mOmniSwitchRecents = Settings.System.getIntForUser(mContext.getContentResolver(),
-                       Settings.System.RECENTS_USE_OMNISWITCH, 0,
-                       UserHandle.USER_CURRENT) == 1;
-            }
+	    updateRecents();
         }
     };
 
@@ -341,8 +329,13 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     protected void updateRecents() {
-        boolean slimRecents = Settings.System.getIntForUser(mContext.getContentResolver(),
+        ContentResolver resolver = mContext.getContentResolver();
+
+        boolean slimRecents = Settings.System.getIntForUser(resolver,
                 Settings.System.USE_SLIM_RECENTS, 0, UserHandle.USER_CURRENT) == 1;
+
+        mOmniSwitchRecents = Settings.System.getIntForUser(resolver,
+                Settings.System.RECENTS_USE_OMNISWITCH, 0, UserHandle.USER_CURRENT) == 1;
 
         if (slimRecents) {
             mSlimRecents = new RecentController(mContext, mLayoutDirection);
